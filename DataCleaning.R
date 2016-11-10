@@ -41,9 +41,7 @@ unique(eu$GEO)
 
 ## Drop EU-related observations from unemployment data ##
 
-dropnames <- c("Euro area (18 countries)", "Euro area (19 countries)", 
-               "European Union (28 countries)", "Euro area (EA11-2000, EA12-2006, EA13-2007, EA15-2008, EA16-2010, EA17-2013, EA18-2014, EA19)",
-               "European Union (25 countries)", "European Union (27 countries)")
+dropnames <- c("Euro area (18 countries)", "Euro area (19 countries)", "European Union (28 countries)", "Euro area (EA11-2000, EA12-2006, EA13-2007, EA15-2008, EA16-2010, EA17-2013, EA18-2014, EA19)", "European Union (25 countries)", "European Union (27 countries)")
 
 eu <- eu[! eu$GEO %in% dropnames, ]
 
@@ -66,7 +64,7 @@ table(df$cntry) # check to see country names remaining
 
 ## Removing unwanted columns from ESS data ##
 
-ESSVariables <-c("cntry", "essround", "polintr","trstprl", "trstplt","trstep","vote","contplt","wrkprty","wrkorg","badge","sgnptit","pbldmn","bctprd","clsprty","mmbprty","edulvla","eisced", "eduyrs", "pdwrk", "edctn","uempla", "uempli","dsbld", "pdjobev", "emplrel", "wrkctra", "wkhtot", "uemp12m", "mbtru")
+ESSVariables <-c("cntry", "essround", "polintr","trstprl", "trstplt","trstep","vote","contplt","wrkprty","wrkorg","badge","sgnptit","pbldmn","bctprd","clsprty","mmbprty","edulvla","uempla", "uempli","dsbld", "mbtru")
 
 ESSData <- df[ESSVariables]
 
@@ -77,12 +75,29 @@ table(ESSData$cntry)
 
 table(ESSData$polintr) # want to drop any response greater than 4
 
-ESSData <- subset(ESSData, ESSData$polintr <= 4 & ESSData$trstprl <=10)
+ESSData <- subset(ESSData, ESSData$polintr <= 4 & ESSData$trstprl <=10 & ESSData$trstplt <=10 & 
+                    ESSData$trstep <=10 & ESSData$vote <=3 & ESSData$contplt <=2 & ESSData$wrkprty <= 2 
+                  & ESSData$badge <=2 & ESSData$sgnptit <= 2 & ESSData$pbldmn <= 2 & ESSData$bctprd <= 2 
+                  & ESSData$clsprty <=2 & ESSData$edulvla <= 55 & ESSData$mbtru <= 3)
 
+table(ESSData$mbtru)
+
+## Add year value for ESS Rounds ##
+
+ESSData$TIME[ESSData$essround == 1] <- 2002
+ESSData$TIME[ESSData$essround == 2] <- 2004
+ESSData$TIME[ESSData$essround == 3] <- 2006
+ESSData$TIME[ESSData$essround == 4] <- 2008
+ESSData$TIME[ESSData$essround == 5] <- 2010
+ESSData$TIME[ESSData$essround == 6] <- 2012
+
+## Group Data ##
+
+GroupedESS <- group_by(ESSData, cntry, TIME) # Group the ESS Data by country and year
+
+MeansESS <- summarize(GroupedESS, avgpolintr = mean(polintr), avgtrstprl = mean(trstprl), avgtrstplt = mean(trstplt), avgtrstep = mean(trstep), avgvote = mean(vote), avgcontplt = mean(contplt), avgwrkprty = mean(wrkprty), avgwrkorg = mean(wrkorg), avgbadge=mean(badge), avgsgnptit = mean(sgnptit), avgpbldmn = mean(pbldmn), avgbctprd = mean(bctprd), avgclsprty = mean(clsprty), avgmmbprty = mean(mmbprty), avgedulvla = mean(edulvla), avguempla = mean(uempla), avguempli = mean(uempli), avgdsbld = mean(dsbld), avgmbtru = mean(mbtru)) 
+# create variables containing the means for each country and year
 
 #### Merge Datasets ####
 
-YouthData <- merge(df, eu, by = "cntry", all = T)
-
-YouthData$cntry==JP
-
+YouthData <- merge(MeansESS, eu, by = c("cntry", "TIME"), all = T)
