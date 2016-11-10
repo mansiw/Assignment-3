@@ -1,0 +1,120 @@
+---
+title: "Assignment 3"
+author: "Tori Dykes and Mansi Wadhwa"
+date: "Saturday, November 05, 2016"
+output: pdf_document
+---
+
+```{r options, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, message = FALSE)
+
+```
+
+Loading packages
+```{r}
+library(stargazer)  # for summary statistics and regression tables
+library(magrittr)  # for 'piping': more readable code
+library(ggplot2)  # the ggplot2 package provides nice function for plotting
+library(arm)  # for the sim() function to simulate model estimates
+library(interplot)  # for plotting interactions
+library(dplyr)  # for data manipulation
+
+```
+
+Data from Eurostats Labour Force adjusted series 
+
+Loading the data
+
+```{r}
+d <- read.csv('C:/Users/hp/Downloads/ESS1-6e01_1_F1.csv')
+e <- read.csv('C:/Users/hp/Downloads/Under 25 unemp.csv')
+```
+
+Since we want to focus on the youth, we need to restrict both datasets to observations from the relevant age group only. 
+Summarising age variables for both datasets and subsetting the dataset accordingly
+
+
+```{r}
+df <- subset(d, d$agea <= 25 & d$agea >= 18)
+eu <- subset(e, e$AGE == "Less than 25 years")
+
+summary(df$agea)
+summary(eu$AGE)
+```
+
+Checking number of observations for each country in each round of the survey.
+This counts the number of entries for DE in round 1 and round 2 of the survey.
+
+```{r}
+sum(with(df, cntry == "DE" & essround == 1))
+sum(with(df, cntry == "DE" & essround == 2))
+
+# Number of observations for Germany in all rounds
+sum(with(df, cntry == "DE"))
+
+```
+
+Printing the number of observations for each of the 6 ESS rounds
+```{r}
+for(i in 1:6){
+x <- sum(with(df, essround == i))
+print(x)
+}
+```
+
+[Link to metadata for EU data: http://ec.europa.eu/eurostat/cache/metadata/en/une_esms.htm
+"The unemployment rate is the number of people unemployed as a percentage of the labour force. The labour force is the total number of people employed and unemployed. In the database, unemployment rates can be downloaded by chosing the unit "PC_ACT", Percentage of Active Population."]
+
+In order to merge the datasets, the EU data needs to be modified further. Firstly, it only needs to contain one measure of the youth unemployment, namely youth unemployed as a percentage of active population. It currently contains three different measures. 
+
+Secondly, we need only the data for years for which we have the corresponding ESS survey values. The Eurostat data contains observations from 2006 to 2015 while the ESS rounds have data for 7 rounds: 2002, 2004, 2006, 2008, 2010, 2012, 2014.
+
+
+```{r}
+eu <- subset(eu, eu$UNIT == "Percentage of active population")
+eu <- subset(eu, eu$TIME == 2006 |eu$TIME == 2008 |eu$TIME == 2010 |eu$TIME == 2012| eu$TIME == 2014)
+```
+
+Thirdly, the two datasets contain different countries (as shown below). 
+While data from Eurostats contains 39 geographical levels, the ESS data contains 32 levels/countries. We need one common variable to be able to merge these two datasets together.
+```{r}
+unique(df$cntry)
+unique(eu$GEO)
+```
+
+
+
+Plotting a boxplot to see how political interest varies in each ESS round starting 2002 to 2014
+
+```{r}
+boxplot(df$polint ~ df$essround)
+# shows that 
+# not very informative in my opinion since it the polintr var is not continuous 
+```
+
+Variables for unemployment:
+- uempla (Doing last 7 days: unemployed, actively looking for job )
+- uempli (Doing last 7 days: unemployed, not actively looking for job)
+- uemp3m(Ever unemployed and seeking work for a period more than three months)
+- uemp12m (Any period of unemployment and work seeking lasted 12 months or more)
+- uemp5yr (Any period of unemployment and work seeking within last 5 years)
+
+
+
+So, 
+
+
+
+Boxplot of uemp12m with ESS round shows weird results. 
+boxplot(df$uemp12m ~ df$essround)
+
+To check the above, let's look at 
+new <- 
+if(df$essround == 6){
+table(df$uemp12m)
+}
+
+
+if(hours > 100) {
+      net.price <- net.price * 0.9
+    }
