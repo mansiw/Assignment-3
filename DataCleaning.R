@@ -11,6 +11,8 @@ library(dplyr)  # for data manipulation
 
 ## Loading the Data ##
 
+setwd('/Users/toridykes1/GitHub/Assignment-3')
+
 d <- read.csv('ESS1-6e01_1_F1.csv') # ESS Data on Political Engagement
 e <- read.csv('Under 25 unemp.csv', stringsAsFactors = F) # Eurostat Data on Unemployment
 
@@ -51,14 +53,36 @@ eu$GEO[eu$GEO=="Germany (until 1990 former territory of the FRG)"] <- "Germany"
 
 ## Add country code to country names for merging ##
 
-install.packages("countrycode")
 library(countrycode)
-countrycode("Austria", "country.name", "iso2c")
+#countrycode("Austria", "country.name", "iso2c")
 
-eu$COUNTRY <- countrycode(eu$GEO, "country.name", "iso2c")
+eu$cntry <- countrycode(eu$GEO, "country.name", "iso2c")
 
-
-## Removing Austria from ESS data 
-temp <- with(df, which(df$cntry == "AT", arr.ind=TRUE))
+## Removing Undesired Countries from ESS Dataset ##
+temp <- with(df, which(df$cntry == "AT" | df$cntry == "HR" | df$cntry == "IS" | df$cntry == "LT" | df$cntry == "LU" | df$cntry == "RU" | df$cntry == "TR" | df$cntry == "UA", arr.ind=TRUE))
 df <- df[-temp, ]
+
+table(df$cntry) # check to see country names remaining
+
+## Removing unwanted columns from ESS data ##
+
+ESSVariables <-c("cntry", "essround", "polintr","trstprl", "trstplt","trstep","vote","contplt","wrkprty","wrkorg","badge","sgnptit","pbldmn","bctprd","clsprty","mmbprty","edulvla","eisced", "eduyrs", "pdwrk", "edctn","uempla", "uempli","dsbld", "pdjobev", "emplrel", "wrkctra", "wkhtot", "uemp12m", "mbtru")
+
+ESSData <- df[ESSVariables]
+
+table(ESSData$cntry)
+
+
+## Condensing ESS Data ##
+
+table(ESSData$polintr) # want to drop any response greater than 4
+
+ESSData <- subset(ESSData, ESSData$polintr <= 4 & ESSData$trstprl <=10)
+
+
+#### Merge Datasets ####
+
+YouthData <- merge(df, eu, by = "cntry", all = T)
+
+YouthData$cntry==JP
 
