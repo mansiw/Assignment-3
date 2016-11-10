@@ -108,13 +108,4 @@ So,
 Boxplot of uemp12m with ESS round shows weird results. 
 boxplot(df$uemp12m ~ df$essround)
 
-To check the above, let's look at 
-new <- 
-if(df$essround == 6){
-table(df$uemp12m)
-}
 
-
-if(hours > 100) {
-      net.price <- net.price * 0.9
-    }
