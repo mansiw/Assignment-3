@@ -58,5 +58,7 @@ countrycode("Austria", "country.name", "iso2c")
 eu$COUNTRY <- countrycode(eu$GEO, "country.name", "iso2c")
 
 
-
+## Removing Austria from ESS data 
+temp <- with(df, which(df$cntry == "AT", arr.ind=TRUE))
+df <- df[-temp, ]
 
