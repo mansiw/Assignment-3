@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = TRUE, message = FALSE)
 ```
 
 Loading packages
-```{r}
+```{r, message=F, warning=F}
 library(stargazer)  # for summary statistics and regression tables
 library(magrittr)  # for 'piping': more readable code
 library(ggplot2)  # the ggplot2 package provides nice function for plotting
@@ -26,8 +26,8 @@ Data from Eurostats Labour Force adjusted series
 Loading the data
 
 ```{r}
-d <- read.csv('C:/Users/hp/Downloads/ESS1-6e01_1_F1.csv')
-e <- read.csv('C:/Users/hp/Downloads/Under 25 unemp.csv')
+d <- read.csv('ESS1-6e01_1_F1.csv') # ESS
+e <- read.csv('Under 25 unemp.csv') # Eurostat Data
 ```
 
 Since we want to focus on the youth, we need to restrict both datasets to observations from the relevant age group only. 
