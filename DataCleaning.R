@@ -49,18 +49,18 @@ eu <- eu[! eu$GEO %in% dropnames, ]
 
 eu$GEO[eu$GEO=="Germany (until 1990 former territory of the FRG)"] <- "Germany"
 
-## Add country code to country names for merging ##
-
-library(countrycode)
-#countrycode("Austria", "country.name", "iso2c")
-
-eu$cntry <- countrycode(eu$GEO, "country.name", "iso2c")
-
 ## Removing Undesired Countries from ESS Dataset ##
-temp <- with(df, which(df$cntry == "AT" | df$cntry == "HR" | df$cntry == "IS" | df$cntry == "LT" | df$cntry == "LU" | df$cntry == "RU" | df$cntry == "TR" | df$cntry == "UA", arr.ind=TRUE))
+temp <- with(df, which(df$cntry == "AT" | df$cntry == "HR" | df$cntry == "IS" | df$cntry == "LT" | df$cntry == "LU" | df$cntry == "RU" | df$cntry == "TR" | df$cntry == "UA" | df$cntry == "IL" | df$cntry == "CH", arr.ind=TRUE))
 df <- df[-temp, ]
 
 table(df$cntry) # check to see country names remaining
+
+
+##Removing Undesired Countries from Unemployment Dataset ##
+
+temp2 <- with(eu, which(eu$GEO == "Japan" | eu$GEO == "Turkey" | eu$GEO == "United States" | eu$GEO == "Austria" | eu$GEO == "Croatia" | eu$GEO == "United States" | eu$GEO == "Iceland" | eu$GEO == "Lithuania" | eu$GEO == "Luxembourg" | eu$GEO == "Latvia" | eu$GEO == "Romania" | eu$GEO == "Malta" | eu$GEO == "Switzerland",  arr.ind=TRUE))
+eu <- eu[-temp2, ]
+
 
 ## Removing unwanted columns from ESS data ##
 
@@ -88,6 +88,13 @@ ESSData$TIME[ESSData$essround == 4] <- 2008
 ESSData$TIME[ESSData$essround == 5] <- 2010
 ESSData$TIME[ESSData$essround == 6] <- 2012
 
+## Add country code to unemployment data country names for merging ##
+
+library(countrycode)
+#countrycode("Austria", "country.name", "iso2c")
+
+eu$cntry <- countrycode(eu$GEO, "country.name", "iso2c")
+
 ## Group Data ##
 
 GroupedESS <- group_by(ESSData, cntry, TIME) # Group the ESS Data by country and year
@@ -98,3 +105,6 @@ MeansESS <- summarize(GroupedESS, avgpolintr = mean(polintr), avgtrstprl = mean(
 #### Merge Datasets ####
 
 YouthData <- merge(MeansESS, eu, by = c("cntry", "TIME"), all = T)
+
+YouthData$Value <- as.numeric(as.character(YouthData$Value)) # Ensure all the unemployment value are numerics 
+
