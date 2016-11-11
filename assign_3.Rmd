@@ -1,7 +1,7 @@
 ---
 title: "Assignment 3"
 author: "Tori Dykes and Mansi Wadhwa"
-date: "Saturday, November 05, 2016"
+date: "Friday, November 11, 2016"
 output: pdf_document
 ---
 
@@ -10,8 +10,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = TRUE, message = FALSE)
 
 ```
 
-Loading packages
-```{r, message=F, warning=F}
+```{r, message=F, warning=F, echo = F}
 library(stargazer)  # for summary statistics and regression tables
 library(magrittr)  # for 'piping': more readable code
 library(ggplot2)  # the ggplot2 package provides nice function for plotting
@@ -27,8 +26,13 @@ source('DataCLeaning.R') # Loads our data cleaning document to access cleaned da
 
 # Introduction
 
+As stated in our last submission, the guiding question for our research project is, **"How does the youth unemployment rate in European countries affect the level and type of political engagement among youths in those same countries?"** To address this questions, we have selected two separate datasets to consider. The first is the European Social Survey, which is a representative survey conducted every two years in up to 36 different countries (the actual number of participating countries tends change slightly between surveys). The survey uses face-to-face interviews to gauge the attitudes, perspectives and beliefs of individuals pertaining to topics like media, politics, social exclusion, and personal values. For our research, we will focus on a selection of the poltiical variables. The second data source we utilize is Eurostat's data on unemployment in European countries over the last 12 years. The specific measurement we will focus on is the "percentage of active population" that is currently unemployed, specifically for the under-25 grouping. For our purposes, the years 2008 and 2010 will prove particularly relevant, since the economic crisis of 2008 had a significant effect on youth unemployment across Europe. 
+
+For the rest of this paper, we will elucidate our data-cleaning process, offer some initial descriptive statistics to start to flesh out the topic, and then clarify what we expect our next steps will be for the final paper. 
+
 # Data Cleaning Process
 
+<<<<<<< HEAD
 Since we are focussing on youth unemployment for our analysis, we restricted the data sets to an appropriate age group. The ESS data carries individual-level observations and hence, we are using only the observations falling within the age group of 18 to 25. Similarly, the Eurostat data contains unemployment rates per year per country/geographical division for the total population as well for those less than 25 years of age. We subset our data to contain only the values for those in the group "Less than 25 years of age". 
 
 In order to merge the datasets, both the datasets need to be modified according to our requirements for our research question. 
@@ -46,17 +50,93 @@ Further, after looking into the construction of different variables and the stru
 As we want to merge the datasets by time as well as country, we had to undertake the process of equalising the both these variables. We created a new variable by the name 'cntry' in the Eurostat dataset which carried the country codes for each country included.This was required as the ESS data only contained the country codes while Eurostat data only showed the full names of countries. The time dimension was equalised as described above. 
 
 Lastly, ESS data was grouped by year and country after which the means of individual-level observations in the ESS data were taken within the desginated groups. Hence, we now, have average value of each variable for each country by each year covered. This new data frame (built from the original ESS data) was merged with Eurostats data to give us our final data frame containing the measure of youth unemployment and various indicators of political participation per country per year. 
-
-
+=======
 # Descriptive Statistics
 
+To start out with, it would be interesting to get an idea how much a given ESS category tends to vary from round to round for a single country. For example, here is a side-by-side comparison of how the average political interest of youth in France and Spain has varied between 2002 and 2012 (unforunately, there is no ESS data for Spain for 2012). For reference, the scale here is 1 to 4, with a 1 representing someome who says they are "very interested in politics" and a 4 representing someone who says they are "not at all interested in politics."
 
+```{r, echo=FALSE, message=F, warning=F}
+
+FranceData <- subset(YouthData, YouthData$cntry=="FR") # Create dataframe with just France information 
+
+FrancePolintr <- ggplot(data=FranceData, aes(x=TIME, y=avgpolintr)) + geom_bar(stat="identity") + scale_x_discrete(limits=c(2002,2004,2006,2008,2010,2012)) + labs(x="Year", y="Average Youth Political Interest") + ggtitle("Average Political Interest \n of French Youths") + geom_text(aes(label=round(avgpolintr, digits=2)), vjust=1.6, color="white", size=3.5) + theme(text = element_text(size=12)) # Plot avgpolintr for France
+
+SpainData <- subset(YouthData, YouthData$cntry=="ES") # Create dataframe with just Spain information 
+
+SpainPolintr <- ggplot(data=SpainData, aes(x=TIME, y=avgpolintr)) + geom_bar(stat="identity") + scale_x_discrete(limits=c(2002,2004,2006,2008,2010)) + labs(x="Year", y="Average Youth Political Interest") + ggtitle("Average Political Interest \n of Spanish Youths") + geom_text(aes(label=round(avgpolintr, digits=2)), vjust=1.6, color="white", size=3.5) + theme(text = element_text(size=12)) # Plot avgpolintr for Spain
+
+library(gridExtra)
+grid.arrange(FrancePolintr, SpainPolintr, ncol=2) # show side-by-side
+
+
+```
+
+Though there are not drastic changes between survey years, for France we can still notice a small increase in political interest in 2008, and a marked decrease between 2008 and 2010, which is particularly interesting timing given the economic downturn that happened in 2008. With Spain, we can see that overall, there seems to be slightly higher political apathy on average, and the values do not seem to have reacted noticeably to the economic downturn. 
+
+For further insight, we can look at the data for two other countries, Denmark and the UK.
+
+```{r, echo=FALSE, message=F, warning=F}
+
+DenmarkData <- subset(YouthData, YouthData$cntry=="DK") # Create dataframe with just France information 
+
+DenmarkPolintr <- ggplot(data=DenmarkData, aes(x=TIME, y=avgpolintr)) + geom_bar(stat="identity") + scale_x_discrete(limits=c(2002,2004,2006,2008,2010,2012)) + labs(x="Year", y="Average Youth Political Interest") + ggtitle("Average Political Interest \n of Danish Youths") + geom_text(aes(label=round(avgpolintr, digits=2)), vjust=1.6, color="white", size=3.5) + theme(text = element_text(size=12)) # Plot avgpolintr for Denmark
+
+UKData <- subset(YouthData, YouthData$cntry=="GB") # Create dataframe with just Spain information 
+
+UKPolintr <- ggplot(data=UKData, aes(x=TIME, y=avgpolintr)) + geom_bar(stat="identity") + scale_x_discrete(limits=c(2002,2004,2006,2008,2010,2012)) + labs(x="Year", y="Average Youth Political Interest") + ggtitle("Average Political Interest \n of UK Youths") + geom_text(aes(label=round(avgpolintr, digits=2)), vjust=1.6, color="white", size=3.5) + theme(text = element_text(size=12)) # Plot avgpolintr for UK
+>>>>>>> origin/master
+
+library(gridExtra)
+grid.arrange(DenmarkPolintr, UKPolintr, ncol=2) # show side-by-side
+
+
+```
+
+<<<<<<< HEAD
+# Descriptive Statistics
+=======
+We can see that Danish youths are somewhat more politically interested than Spanish or French youths, but they still experienced a decrease in political interest from 2008 to 2010. However, such an effect is less noticeable for the UK, and the numbers even seem to suggest a very slight increase in political interest from 2008 to 2010.
+
+It is of course important to note that political interest is just one metric for evaluating political engagement, and we intend to look at more indicators for our full research report. This is just meant to give an overview of what kind of variation in these metrics we can expect.
+
+On the topic of youth unemployment, most countries experienced a significant increase in the unemployment rate form 2008 to 2010. The following table looks at this change for all European countries that exist in both datasets.
+>>>>>>> origin/master
+
+```{r, message=F, echo=F, warning=F}
+
+<<<<<<< HEAD
 # Moving Forward
 
 Analyzing the relationship between youth unemployment and the political engagement of young people would require us to think about the possible control variables that we need to include in our model. We will potentially be using at a 3rd dataset from where we can extract variables that capture political stability, education levels, levels of employment related public protection etc.  
 
 Since our current dataset contains data ESS Round 6 (2012), we will also be extracting relevant parts of the integrated 2014 ESS Round 7 dataset to supplement our data. Another issue that we would need to deal with is how to use the different measures of political engagement from our current dataset in our analysis. 
+=======
+Unemp0810 <- subset(YouthData, YouthData$TIME==2008 | YouthData$TIME==2010)
 
+Unemp0810$TIME <- factor(Unemp0810$TIME) # Ensure year is treated as levels, not as continuous numbers
 
+Unemp0810 <- group_by(Unemp0810, cntry, TIME)
+>>>>>>> origin/master
 
+Unemp0810$Value <- as.numeric(as.character(Unemp0810$Value)) # Ensure all the unemployment value are numerics 
+
+ggplot(data=Unemp0810, aes(x=cntry, y=Value, fill=TIME)) + geom_bar(stat="identity", position=position_dodge()) + labs(x="Country", y="Unemployment Rate (% of active population)") + ggtitle("Youth Unemployment Rates in Europe, 2008 - 2010")
+
+```
+
+All countries experienced at least a modest increase in the youth unemployment rate between 2008 and 2010, with the exception of Germany.
+
+To start to bring the two concepts of youth political engagement and youth unemployment together, we can already run a simple bivariate regression using the data we currently have available.
+
+```{r, message=F, echo=F, results='asis'}
+
+m1 <- lm(YouthData$avgpolintr ~ YouthData$Value)
+
+stargazer(list(m1), header = F, float = F, single.row = T)
+
+```
+
+It indicates that increases in the youth unemployment rate in a country lead to a decrease in interest in politics (recall that a higher number here means a lower interest). Though the effect is significant, it is quite small. For the final project, we will investigate what kinds of control variables we could make use of to strengthen the regression.
+
+# Moving Forward
 
