@@ -1,6 +1,3 @@
----
-output: pdf_document
----
 # Assignment 3  
 
 In this repository, we have the following:
