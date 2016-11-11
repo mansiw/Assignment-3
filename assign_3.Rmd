@@ -140,3 +140,11 @@ It indicates that increases in the youth unemployment rate in a country lead to 
 
 # Moving Forward
 
+Analyzing the relationship between youth unemployment and political engagement of youth would require us to think about other control variables to be included in our model in the future. We will be potentially be considering incoporating relevant elements of a 3rd dataset that captures factors like political stability, educational levels, employment protections levels etc. 
+
+Since our current dataset contains information up to ESS round 6 (2012), we will be extracting relevant variables from the integrated ESS Round 7 (2014) dataset to supplement our data. Additionally, we will have to consider how to incorporate and deal with the various aspects of political engagement that have been captured by our variables. 
+
+
+
+
+
