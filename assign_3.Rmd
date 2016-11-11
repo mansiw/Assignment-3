@@ -29,42 +29,34 @@ source('DataCLeaning.R') # Loads our data cleaning document to access cleaned da
 
 # Data Cleaning Process
 
+Since we are focussing on youth unemployment for our analysis, we restricted the data sets to an appropriate age group. The ESS data carries individual-level observations and hence, we are using only the observations falling within the age group of 18 to 25. Similarly, the Eurostat data contains unemployment rates per year per country/geographical division for the total population as well for those less than 25 years of age. We subset our data to contain only the values for those in the group "Less than 25 years of age". 
+
+In order to merge the datasets, both the datasets need to be modified according to our requirements for our research question. 
+
+Firstly, the Eurostat dataset currently contains three different measures of youth unemployment. We want to focus only on one measure, namely unemployed youth as a percentage of active population. The data is subset keeping only this single statistic. 
+
+Secondly, the time dimesnion of both datasets needed to be equalised. We restrict the Eurostat dataset to contain only the data for the years for which we have the corresponding ESS survey data. The Eurostat data contains observations from 2006 to 2015 while the ESS was conducted in 7 rounds in the years: 2002, 2004, 2006, 2008, 2010, 2012, 2014. At the same time, ESS data does not contain an year variable but instead, has a variable called 'essround' that tells us which survey round and corresponsingly, which year a particular observation belongs to. We create a new year variable that takes the information from 'essround' and displays the year instead. It is also named the same as the year variable in the second dataset to facilitate merging. 
+
+Although our current dataset contains data only until 2012 (owing to the data downloading process), we would like to extract the relevant information from the 2014 ESS dataset and include it in our analysis at the next stage. 
+
+Thirdly, different countries/geographical units are covered in the two datasets. While data from Eurostat contains 39 geographical levels, the ESS covers a total of 32 European and non-European countries. We drop all observations pertaining to the European Union as a whole from the Eurostats data as we intend to carry out our analysis using country-level data, given the diversity of national socio-political systems within the EU. To ensure uniformity and ease of nomenclature, we rename a country (Germany). In a similar vein, we also clean the ESS data by dropping undesired countries, i.e. countries for which we either do not have corresponding data in the other source or countries that do not fall under the ambit of our intended analysis.
+
+Further, after looking into the construction of different variables and the structure of the responses in the ESS, we keep only those variables that have a sufficient number of observations for our purposes and are directly relevant to us. Since many of the ESS variables are categorical and contains coded response levels, we drop categories like "No answer", "Refusal", "Don't know". We thus, collapse the caegories in these variables in line with our intended research question. 
+
+As we want to merge the datasets by time as well as country, we had to undertake the process of equalising the both these variables. We created a new variable by the name 'cntry' in the Eurostat dataset which carried the country codes for each country included.This was required as the ESS data only contained the country codes while Eurostat data only showed the full names of countries. The time dimension was equalised as described above. 
+
+Lastly, ESS data was grouped by year and country after which the means of individual-level observations in the ESS data were taken within the desginated groups. Hence, we now, have average value of each variable for each country by each year covered. This new data frame (built from the original ESS data) was merged with Eurostats data to give us our final data frame containing the measure of youth unemployment and various indicators of political participation per country per year. 
+
+
 # Descriptive Statistics
+
 
 # Moving Forward
 
-Data from Eurostats Labour Force adjusted series 
+Analyzing the relationship between youth unemployment and the political engagement of young people would require us to think about the possible control variables that we need to include in our model. We will potentially be using at a 3rd dataset from where we can extract variables that capture political stability, education levels, levels of employment related public protection etc.  
 
-Loading the data
-
-
-Since we want to focus on the youth, we need to restrict both datasets to observations from the relevant age group only. 
-Summarising age variables for both datasets and subsetting the dataset accordingly
-
-
-
-Checking number of observations for each country in each round of the survey.
-This counts the number of entries for DE in round 1 and round 2 of the survey.
-
-
-
-Printing the number of observations for each of the 6 ESS rounds
-
-
-[Link to metadata for EU data: http://ec.europa.eu/eurostat/cache/metadata/en/une_esms.htm
-"The unemployment rate is the number of people unemployed as a percentage of the labour force. The labour force is the total number of people employed and unemployed. In the database, unemployment rates can be downloaded by chosing the unit "PC_ACT", Percentage of Active Population."]
-
-In order to merge the datasets, the EU data needs to be modified further. Firstly, it only needs to contain one measure of the youth unemployment, namely youth unemployed as a percentage of active population. It currently contains three different measures. 
-
-Secondly, we need only the data for years for which we have the corresponding ESS survey values. The Eurostat data contains observations from 2006 to 2015 while the ESS rounds have data for 7 rounds: 2002, 2004, 2006, 2008, 2010, 2012, 2014.
+Since our current dataset contains data ESS Round 6 (2012), we will also be extracting relevant parts of the integrated 2014 ESS Round 7 dataset to supplement our data. Another issue that we would need to deal with is how to use the different measures of political engagement from our current dataset in our analysis. 
 
 
 
 
-Thirdly, the two datasets contain different countries (as shown below). 
-While data from Eurostats contains 39 geographical levels, the ESS data contains 32 levels/countries. We need one common variable to be able to merge these two datasets together.
-
-
-
-
-Plotting a boxplot to see how political interest varies in each ESS round starting 2002 to 2014
