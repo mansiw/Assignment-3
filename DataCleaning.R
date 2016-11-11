@@ -75,10 +75,7 @@ table(ESSData$cntry)
 
 table(ESSData$polintr) # want to drop any response greater than 4
 
-ESSData <- subset(ESSData, ESSData$polintr <= 4 & ESSData$trstprl <=10 & ESSData$trstplt <=10 & 
-                    ESSData$trstep <=10 & ESSData$vote <=3 & ESSData$contplt <=2 & ESSData$wrkprty <= 2 
-                  & ESSData$badge <=2 & ESSData$sgnptit <= 2 & ESSData$pbldmn <= 2 & ESSData$bctprd <= 2 
-                  & ESSData$clsprty <=2 & ESSData$edulvla <= 55 & ESSData$mbtru <= 3)
+ESSData <- subset(ESSData, ESSData$polintr <= 4 & ESSData$trstprl <=10 & ESSData$trstplt <=10 & ESSData$trstep <=10 & ESSData$vote <=3 & ESSData$contplt <=2 & ESSData$wrkprty <= 2 & ESSData$badge <=2 & ESSData$sgnptit <= 2 & ESSData$pbldmn <= 2 & ESSData$bctprd <= 2 & ESSData$clsprty <=2 & ESSData$edulvla <= 55 & ESSData$mbtru <= 3)
 
 table(ESSData$mbtru)
 
