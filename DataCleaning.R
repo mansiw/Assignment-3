@@ -13,9 +13,8 @@ library(dplyr)  # for data manipulation
 
 setwd('/Users/toridykes1/GitHub/Assignment-3')
 
-d <- read.csv('ESS1-6e01_1_F1.csv') # ESS Data on Political Engagement
-e <- read.csv('Under 25 unemp.csv', stringsAsFactors = F) # Eurostat Data on Unemployment
-
+d <- read.csv('Datasets/ESS1-6e01_1_F1.csv') # ESS Data on Political Engagement
+e <- read.csv('Datasets/Under 25 unemp.csv', stringsAsFactors = F) # Eurostat Data on Unemployment
 
 #### Cleaning Up the Data ####
 
